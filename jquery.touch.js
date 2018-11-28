@@ -192,9 +192,7 @@
 				event.stopPropagation();
 
 			// Prevent default if the element has a swipe or drag event (and the user has "preventDefault" turned on).
-				if ((t.uses('drag') && (t.settings.preventDefault.drag)(t))
-				||	(t.uses('swipe') && (t.settings.preventDefault.swipe)(t))
-				||	(t.uses('tap') && (t.settings.preventDefault.tap)(t)))
+				if (t.uses('tap') && (t.settings.preventDefault.tap)(t))
 					event.preventDefault();
 
 			// Hack: Clear touch callout/user select stuff on Webkit if the element has a tapAndHold event.
@@ -309,11 +307,6 @@
 			// Prevent original event from bubbling.
 				event.stopPropagation();
 
-			// Prevent default if the element has a swipe or drag event (and the user has "preventDefault" turned on).
-				if ((t.uses('swipe') && (t.settings.preventDefault.swipe)(t))
-				|| (t.uses('drag') && (t.settings.preventDefault.drag)(t)))
-					event.preventDefault();
-
 			// Stop tapAndHold timer.
 			// Note: Only if cursor moves too much. Needed to compensate for hypersensitive touchscreens.
 				if (diff > 2)
@@ -322,6 +315,11 @@
 			// In a drag? Trigger "drag".
 				if (t.inDrag
 				&&	dragTarget == t) {
+
+				    // Prevent default if the element has a drag event and drag started (dragThreshold and dragDelay passed)
+                    if ((t.uses('swipe') && (t.settings.preventDefault.swipe)(t))
+                        || (t.uses('drag') && (t.settings.preventDefault.drag)(t)))
+                        event.preventDefault();
 
 					t.$element.trigger(
 						'drag',
